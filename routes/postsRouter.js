@@ -198,14 +198,15 @@ router.delete('/:Id/comments/:commentId', async (req, res) => {
 router.post('/:id/save', async (req, res) => {
     try{
         const save = await Post.findById(req.params.id);
-        if (Post != null && !User.saved_ads.$elemMatch(Post.id)) {
-            User.saved_ads.push(req.body.id);
+        if (save && !User.saved_ads.$elemMatch(Post.id))  //if (Post != null && !User.saved_ads.$elemMatch(Post.id))  
+        {  
+            User.saved_ads.push(req.params.id);
             User.save();
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(Post.id);                
+            res.json(save.id);                
         }
-        else if (Post = null){
+        else if (!save){   //else if (Post = null){ 
             err = new Error('Post ' + req.params.id + ' not found');
             err.status = 404;
         }else{
@@ -214,6 +215,32 @@ router.post('/:id/save', async (req, res) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json(Post.id); 
+        }
+    }catch (err) {
+            res.json({message: err});
+    }
+});
+
+router.post('/:id/like', async (req, res) => {
+    try{
+        const like = await Post.findById(req.params.id);
+        if (like && !like.likes.$elemMatch(User.id))  //if (Post != null && !User.saved_ads.$elemMatch(Post.id))  
+        {  
+            like.likes.push(User.id);
+            like.save();
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(like.id);                
+        }
+        else if (!like){   //else if (Post = null){ 
+            err = new Error('Post ' + req.params.id + ' not found');
+            err.status = 404;
+        }else{
+            like.likes.pull(User.id);
+            like.save();
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(like.id); 
         }
     }catch (err) {
             res.json({message: err});
