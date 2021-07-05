@@ -9,8 +9,8 @@ const User = require('../models/User');
 
 var commentSchema = new Schema({
 
-    userId: String,
-    postId: Number,
+    by: [{type : mongoose.Schema.Types.ObjectId ,ref :'User'}] ,
+    postId: [{type : mongoose.Schema.Types.ObjectId ,ref :'Post'}] ,
     comment:  {
         type: String,
         required: true
@@ -57,9 +57,9 @@ const PostSchema = new Schema({
         type: String,
         required: true
     },
-    latitude: {type: Number},
+    latitude: {type: String},
    
-    longitude: {type: Number},
+    longitude: {type: String},
     
     likes: [{type : mongoose.Schema.Types.ObjectId ,ref :'User'}] ,
 
