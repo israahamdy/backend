@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const hostname = 'localhost';
-const port = process.env.Port || 3000;
+const port = process.env.Port || 5000;
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
