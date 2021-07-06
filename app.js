@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+require('dotenv');
 const http = require('http');
 const hostname = 'localhost';
 const port = process.env.Port || 5000;
@@ -19,12 +20,12 @@ app.get('/', (req, res) =>{
 });
 
 const url = 'mongodb://localhost:27017/RoomieApp';
-const connect = mongoose.connect(process.env.MONGODB_URI ||url,
-  { useNewUrlParser: true , useUnifiedTopology: true });
-
-connect.then((db) => {
-    console.log("Connected correctly to server");
-}, (err) => { console.log(err); });
+const connect = mongoose.connect(process.env.MONGODB_URI ||url,{ 
+  useNewUrlParser: true ,
+  useUnifiedTopology: true })
+  .then(() => {
+    console.log("DB connected");
+}).catch((err) => console.log(err));
 
 
 const server = http.createServer(app);
