@@ -19,7 +19,8 @@ app.get('/', (req, res) =>{
 });
 
 const url = 'mongodb://localhost:27017/RoomieApp';
-const connect = mongoose.connect(url,{ useNewUrlParser: true , useUnifiedTopology: true });
+const connect = mongoose.connect(process.env.MONGODB_URI ||url,
+  { useNewUrlParser: true , useUnifiedTopology: true });
 
 connect.then((db) => {
     console.log("Connected correctly to server");
