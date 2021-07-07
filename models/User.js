@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema({
     username :{type: String},
     email: {type: String},
     phone: {type: String},
-    saved_ads: [Post],
+    saved_ads: ['Post'],
     work: String,
     workAt: String,
     study: String,

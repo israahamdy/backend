@@ -9,8 +9,11 @@ const User = require('../models/User');
 
 var commentSchema = new Schema({
 
-    by: [{type : mongoose.Schema.Types.ObjectId ,ref :'User'}] ,
-    postId: [{type : mongoose.Schema.Types.ObjectId ,ref :'Post'}] ,
+    by: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    } ,
+    postId: {type : mongoose.Schema.Types.ObjectId ,ref :'Post'},
     comment:  {
         type: String,
         required: true
@@ -19,7 +22,7 @@ var commentSchema = new Schema({
 });
 const PostSchema = new Schema({
     
-    by: [{type : mongoose.Schema.Types.ObjectId ,ref :'User'}] ,
+    by: {type : mongoose.Schema.Types.ObjectId ,ref :'User'} ,
    
     price:{
         type: Currency,

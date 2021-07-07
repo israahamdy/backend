@@ -11,6 +11,7 @@ const Post = require('../models/Post');
 router.get('/', async (req, res) => {
         try{
         const posts = await Post.find({});
+        populate('comments.by');
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(posts);
@@ -77,6 +78,7 @@ router.post('/', async (req, res) =>{
 router.patch('/:id', async (req, res)=>{
     try {
         const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body, {useFindAndModify: false});
+        populate('comments.by');        
         res.statusCode = 200;
         res.send(updatedPost);
         
@@ -105,6 +107,7 @@ router.delete('/:id', async (req,res)=>{
 router.get('/:Id/comments', async (req,res) => {
     try{
         const comment = await Post.findById(req.params.id);
+        populate('comments.by');
         if (Post != null) {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -126,8 +129,11 @@ router.post('/:Id/comments', async (req, res) => {
     try{
         const comment = await Post.findById(req.params.id);
         if (Post != null) {
+            req.body.by = req.user._id;
             Post.comments.push(req.body);
-            Post.save()
+            Post.save();
+            Posts.findById(post._id);
+            populate('comments.by');
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json(Post);                
@@ -151,6 +157,8 @@ router.patch('/:Id/comments/:commentId', async (req, res) => {
             Post.comments.id(req.params.commentId).comment = req.body.comment;                
             
             Post.save();
+            Posts.findById(post._id);
+            populate('comments.by');
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json(Post);
@@ -176,6 +184,8 @@ router.delete('/:Id/comments/:commentId', async (req, res) => {
         if (Post != null && Post.comments.id(req.params.commentId) != null) {
             Post.comments.id(req.params.commentId).remove();
             Post.save();
+            Posts.findById(post._id);
+            populate('comments.by');
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json(Post);                
@@ -246,4 +256,22 @@ router.post('/:id/like', async (req, res) => {
             res.json({message: err});
     }
 });
+
+// GET all posts in specific address
+router.post('/address', async (req, res) => {
+    try{
+    const posts = await Post.find({$where : posts.address === req.params});
+    if(posts){
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json(posts);
+    }else if (!posts){   //else if (Post = null){ 
+        res.json('No Post in ' + req.params.address);
+        res.status = 200;
+    }}
+    catch{
+        res.json({message: err});
+    }
+}
+);
 module.exports = router;
